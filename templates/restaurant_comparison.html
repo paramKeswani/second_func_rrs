@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Restaurant Comparison</title>
+    <script src="https://cdn.plot.ly/plotly-2.30.1.min.js" charset="utf-8"></script>
+</head>
+<body>
+    <h1>Restaurant Comparison</h1>
+    <form action="/submit" method="post">
+        <label for="state">Select State:</label>
+        <select name="state" id="state">
+        <option value="karnataka"> Karnataka  </option>
+
+
+        </select><br><br>
+        <label for="city">Select City:</label>
+        <select name="city" id="city">
+             <option value="Bangalore"> Bangalore</option>
+
+        </select><br><br>
+        <label for="restaurant1">Restaurant ID 1:</label>
+        <select name="restaurant1" id="restaurant1">
+            {% for restaurant in restaurant_name1 %}
+            <option value="{{ restaurant }}" {% if selected_restaurant1 and restaurant == selected_restaurant1 %}selected{% endif %}>{{ restaurant }}</option>
+            {% endfor %}
+        </select><br><br>
+        <label for="restaurant2">Restaurant ID 2:</label>
+        <select name="restaurant2" id="restaurant2">
+            {% for restaurant in restaurant_name2 %}
+            <option value="{{ restaurant }}" {% if selected_restaurant2 and restaurant == selected_restaurant2 %}selected{% endif %}>{{ restaurant }}</option>
+            {% endfor %}
+        </select><br><br>
+        <button type="submit">Submit</button>
+    </form>
+
+<!--    {% if fig_rating_comparison %}-->
+<!--    <h2>Rating Comparison</h2>-->
+<!--    <div id="rating_comparison"></div>-->
+<!--    <script>-->
+<!--        var fig_rating_comparison = {{ fig_rating_comparison | safe }};-->
+<!--        Plotly.newPlot('rating_comparison', fig_rating_comparison.data, fig_rating_comparison.layout);-->
+<!--    </script>-->
+<!--    {% endif %}-->
+
+<!--    {% if fig_cost_comparison %}-->
+<!--    <h2>Average Cost for Two Comparison</h2>-->
+<!--    <div id="cost_comparison"></div>-->
+<!--    <script>-->
+<!--        var fig_cost_comparison = {{ fig_cost_comparison | safe }};-->
+<!--        Plotly.newPlot('cost_comparison', fig_cost_comparison.data, fig_cost_comparison.layout);-->
+<!--    </script>-->
+<!--    {% endif %}-->
+
+<!--    {% if restaurant1 and restaurant2 %}-->
+<!--    <h2>Compared Restaurants</h2>-->
+<!--    <p>Restaurant 1: {{ restaurant1 }}</p>-->
+<!--    <p>Restaurant 2: {{ restaurant2 }}</p>-->
+<!--    {% endif %}-->
+
+    <h1>Rating Comparison</h1>
+    {{ fig1 | safe }}
+
+    <h1>Average Cost for Two Comparison</h1>
+    {{ fig2 | safe }}
+</body>
+
+</html>
