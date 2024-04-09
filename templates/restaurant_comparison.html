@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Restaurant Comparison</h1>
-    <form action="/submit" method="post">
+    <form action="/" method="post">
         <label for="state">Select State:</label>
         <select name="state" id="state">
         <option value="karnataka"> Karnataka  </option>
@@ -58,11 +58,23 @@
 <!--    <p>Restaurant 2: {{ restaurant2 }}</p>-->
 <!--    {% endif %}-->
 
-    <h1>Rating Comparison</h1>
-    {{ fig1 | safe }}
 
-    <h1>Average Cost for Two Comparison</h1>
-    {{ fig2 | safe }}
+   <h2>Average Cost for Two Comparison</h2>
+<div id="cost-comparison"></div>
+<script>
+    var costComparisonDiv = document.getElementById('cost-comparison');
+    var graphJSON1 = {{graphJSON1 | safe}};
+    Plotly.newPlot(costComparisonDiv, graphJSON1, {});
+</script>
+
+<h2>Rating Comparison</h2>
+<div id="rating-comparison"></div>
+<script>
+    var ratingComparisonDiv = document.getElementById('rating-comparison');
+    var graphJSON2 = {{graphJSON2 | safe}};
+    Plotly.newPlot(ratingComparisonDiv, graphJSON2, {});
+</script>
+
 </body>
 
 </html>

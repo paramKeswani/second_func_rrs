@@ -57,7 +57,7 @@ def locality_famous_cuisines(state_df):
 
 
 def res_type(df,restaurant):
-  res_df = df[df.name== restaurant]
+  res_df = df[df.res_name== restaurant]
   cuisines = res_df['type'].value_counts()
   fig = px.pie( values=cuisines,names=cuisines.index,hole=0.7)
   return fig
@@ -168,18 +168,18 @@ def res_avg_distance(df):
 
 
 def res_rating_com(df,id1,id2):
-  res1 = df[df.res_id == id1]['name']
-  res2 = df[df.res_id == id2]['name']
-  rat1 = df[df.res_id == id1]['aggregate_rating']
-  rat2 = df[df.res_id == id2]['aggregate_rating']
+  res1 = df[df.id == id1]['res_name']
+  res2 = df[df.id == id2]['res_name']
+  rat1 = df[df.id == id1]['rating']
+  rat2 = df[df.id == id2]['rating']
   fig = px.bar(x=[list(res1)[0],list(res2)[0]],y=[list(rat1)[0],list(rat2)[0]],labels={'x':"Restaurant Name",'y':'Rating'},color_discrete_sequence=['#ec7c34'])
   return fig
 
 def res_cost_com(df,id1,id2):
-  res1 = df[df.res_id == id1]['name']
-  res2 = df[df.res_id == id2]['name']
-  rat1 = df[df.res_id == id1]['average_cost_for_two']
-  rat2 = df[df.res_id == id2]['average_cost_for_two']
+  res1 = df[df.id == id1]['res_name']
+  res2 = df[df.id == id2]['res_name']
+  rat1 = df[df.id == id1]['price_for_two']
+  rat2 = df[df.id == id2]['price_for_two']
   fig = px.bar(x=[list(res1)[0],list(res2)[0]],y=[list(rat1)[0],list(rat2)[0]],labels={'x':"Restaurant Name",'y':'Average Cost For Two'},color_discrete_sequence=['#ec7c34'])
   return fig
 

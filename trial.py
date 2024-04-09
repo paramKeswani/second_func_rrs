@@ -1,24 +1,21 @@
 from flask import Flask, render_template, request
 import pandas as pd
-
 import helper
+import json
+
+import plotly
 
 app = Flask(__name__)
 
 # Read the CSV file
-dfs = pd.read_excel('data.xlsx')
-
-df = pd.read_csv("final.csv")
-
-
+df = pd.read_excel('data.xlsx')
+# df = pd.read_csv("final.csv")
 
 # Extract unique state, city, and restaurant names and sort them
 unique_states = "karnataka"
 unique_cities = "Bangalore"
-restaurant_name1 = sorted(dfs['res_name'].unique())
-restaurant_name2 = sorted(dfs['res_name'].unique())
-
-
+restaurant_name1 = sorted(df['res_name'].unique())
+restaurant_name2 = sorted(df['res_name'].unique())
 
 # Define routes
 @app.route('/')
@@ -29,53 +26,50 @@ def index():
                            restaurant_name1=restaurant_name1,
                            restaurant_name2=restaurant_name2)
 
-@app.route('/submit', methods=['POST'])
+
+@app.route('/', methods=['POST'])
 def submit():
-    # Handle form submission
-    # selected_state = request.form['restaurant1']
-    # selected_city = request.form['restaurant1']
-    # rest_1 = request.form['restaurant1']
-    # rest_2 = request.form['restaurant2']
-    #
-    # rest1 = df[df.name == rest_1]['res_id']
-    # rest1 = rest1.reset_index(drop=True)
-    # rest1 = rest1[0]
-    #
-    # rest2 = df[df.name == rest_2]['res_id']
-    # rest2 = rest2.reset_index(drop=True)
-    # rest2 = rest2[0]
-    #
-    # fig_rating_comparison = helper.res_rating_com(df, rest1, rest2)
-    # fig_cost_comparison = helper.res_cost_com(df, rest1, rest2)
     selected_state = request.form['state']
     selected_city = request.form['city']
 
     rest_1 = request.form['restaurant1']
     rest_2 = request.form['restaurant2']
 
-    rest1 = df[df.name == rest_1]['res_id']
-    rest1 = rest1.reset_index(drop=True)
-    rest1 = rest1[0]
-    rest2 = df[df.name == rest_2]['res_id']
-    rest2 = rest2.reset_index(drop=True)
-    rest2 = rest2[0]
-    # st.subheader('Rating Comparision')
+    rest1 = df[df.res_name == rest_1]['id']
+    if not rest1.empty:
+        rest1 = rest1.reset_index(drop=True)[0]
+    else:
+        # Handle case when no matching restaurant is found
+        return "Restaurant 1 not found."
+
+    rest2 = df[df.res_name == rest_2]['id']
+    if not rest2.empty:
+        rest2 = rest2.reset_index(drop=True)[0]
+    else:
+        # Handle case when no matching restaurant is found
+        return "Restaurant 2 not found."
+
     fig1 = helper.res_rating_com(df, rest1, rest2)
-    # st.plotly_chart(fig)
-    # st.subheader('Average cost for two Comparision')
     fig2 = helper.res_cost_com(df, rest1, rest2)
-    n1 = list(df[df.res_id == rest1]['name'])[0]
-    n2 = list(df[df.res_id == rest2]['name'])[0]
+
+    n1 = list(df[df.id == rest1]['res_name'])[0]
+    n2 = list(df[df.id == rest2]['res_name'])[0]
+
+    graphJSON1 = json.dumps(fig1, cls=plotly.utils.PlotlyJSONEncoder)
+    print(graphJSON1)
+    graphJSON2 = json.dumps(fig2, cls=plotly.utils.PlotlyJSONEncoder)
+    print(graphJSON2)
 
     return render_template('restaurant_comparison.html',
-                           fig_rating_comparison=fig1,
-                           fig_cost_comparison=fig2,
+                           graphJSON1=graphJSON1,
+                           graphJSON2=graphJSON2,
                            restaurant1=n1,
                            restaurant2=n2,
                            selected_state=selected_state,
                            selected_city=selected_city,
                            selected_restaurant1=rest_1,
                            selected_restaurant2=rest_2)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
